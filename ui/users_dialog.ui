@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>406</width>
+    <width>705</width>
     <height>300</height>
    </rect>
   </property>
@@ -31,14 +31,14 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="edit_usr_button">
        <property name="text">
         <string>Edit</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="print_usr_button">
        <property name="text">
         <string>Print Card</string>
        </property>
@@ -47,10 +47,52 @@
     </layout>
    </item>
    <item>
-    <widget class="QTableWidget" name="tableWidget"/>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="search_Button">
+       <property name="text">
+        <string>Search</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="search_edit"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="table_users">
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>new_usr_button</tabstop>
+  <tabstop>delete_usr_button</tabstop>
+  <tabstop>edit_usr_button</tabstop>
+  <tabstop>print_usr_button</tabstop>
+  <tabstop>table_users</tabstop>
+ </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>search_edit</sender>
+   <signal>editingFinished()</signal>
+   <receiver>search_Button</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>134</x>
+     <y>65</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>41</x>
+     <y>69</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

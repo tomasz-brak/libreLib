@@ -121,7 +121,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Edit a book"))
         self.label_3.setText(_translate("Dialog", "ID:"))
         self.label_2.setText(_translate("Dialog", "Author:"))
         self.label.setText(_translate("Dialog", "Title:"))
@@ -131,6 +131,7 @@ class Ui_Dialog(object):
         self.label_7.setText(_translate("Dialog", "Price:"))
         self.label_8.setText(_translate("Dialog", "ISBN:"))
         self.searchButton.setText(_translate("Dialog", "Search"))
+        self.searchButton.setShortcut(_translate("Dialog", "Ctrl+Shift+S"))
         self.label_9.setText(_translate("Dialog", "Location: "))
 
 

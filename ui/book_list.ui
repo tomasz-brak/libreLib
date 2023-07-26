@@ -36,12 +36,18 @@
         <property name="text">
          <string>Borrow Selected</string>
         </property>
+        <property name="shortcut">
+         <string>Ctrl+B</string>
+        </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="new_book_button">
         <property name="text">
          <string>New Book</string>
+        </property>
+        <property name="shortcut">
+         <string>Ctrl+N</string>
         </property>
        </widget>
       </item>
@@ -60,6 +66,9 @@
        <widget class="QPushButton" name="search_button">
         <property name="text">
          <string>Search</string>
+        </property>
+        <property name="shortcut">
+         <string>Ctrl+S</string>
         </property>
        </widget>
       </item>
@@ -86,9 +95,34 @@
      <height>29</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuUsers">
+    <property name="title">
+     <string>Users</string>
+    </property>
+    <addaction name="actionManage"/>
+   </widget>
+   <addaction name="menuUsers"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionManage">
+   <property name="text">
+    <string>Manage</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
+   </property>
+  </action>
  </widget>
+ <tabstops>
+  <tabstop>search_button</tabstop>
+  <tabstop>borrow_book</tabstop>
+  <tabstop>new_book_button</tabstop>
+  <tabstop>edit_book_button</tabstop>
+  <tabstop>delete_book</tabstop>
+  <tabstop>print_cards_button</tabstop>
+  <tabstop>lineEdit</tabstop>
+  <tabstop>tableWidget</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

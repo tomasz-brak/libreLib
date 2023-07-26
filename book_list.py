@@ -2,6 +2,7 @@ from ui.book_list import Ui_MainWindow
 from ui.book_edit_dialog import Ui_Dialog
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QMessageBox
+from users import open_users_popup
 import sys
 import pymongo
 import searchKaro
@@ -182,6 +183,12 @@ def create_ui():
             msg.exec()
 
     def delete():       
+        if len(get_selected()) == 0:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Select at least one book")
+            msg.exec()
+            return
+
         msg = QtWidgets.QMessageBox()
         msg.setText("Are you sure you want to delete this book?")
         msg.setStandardButtons(QMessageBox.StandardButton.Cancel| QMessageBox.StandardButton.Ok)
@@ -198,7 +205,7 @@ def create_ui():
     ui.search_button.clicked.connect(search)
     ui.edit_book_button.clicked.connect(edit)
     ui.delete_book.clicked.connect(delete)
-    
+    ui.actionManage.triggered.connect(open_users_popup)
 
 
     sys.exit(app.exec())
