@@ -1,62 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Users_editor</class>
- <widget class="QDialog" name="Users_editor">
+ <widget class="QWidget" name="Users_editor">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>705</width>
-    <height>300</height>
+    <width>928</width>
+    <height>483</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Users</string>
+   <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QPushButton" name="new_usr_button">
-       <property name="text">
-        <string>New</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QPushButton" name="search_Button">
+         <property name="focusPolicy">
+          <enum>Qt::TabFocus</enum>
+         </property>
+         <property name="text">
+          <string>Search</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="search_edit"/>
+       </item>
+      </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="delete_usr_button">
-       <property name="text">
-        <string>Delete</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="edit_usr_button">
-       <property name="text">
-        <string>Edit</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="print_usr_button">
-       <property name="text">
-        <string>Print Card</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QPushButton" name="search_Button">
-       <property name="text">
-        <string>Search</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="search_edit"/>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="new_usr_button">
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="text">
+          <string>New</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="delete_usr_button">
+         <property name="focusPolicy">
+          <enum>Qt::TabFocus</enum>
+         </property>
+         <property name="text">
+          <string>Delete</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="edit_usr_button">
+         <property name="focusPolicy">
+          <enum>Qt::TabFocus</enum>
+         </property>
+         <property name="text">
+          <string>Edit</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="print_usr_button">
+         <property name="focusPolicy">
+          <enum>Qt::TabFocus</enum>
+         </property>
+         <property name="text">
+          <string>Print Card</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>
@@ -69,30 +88,6 @@
    </item>
   </layout>
  </widget>
- <tabstops>
-  <tabstop>new_usr_button</tabstop>
-  <tabstop>delete_usr_button</tabstop>
-  <tabstop>edit_usr_button</tabstop>
-  <tabstop>print_usr_button</tabstop>
-  <tabstop>table_users</tabstop>
- </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>search_edit</sender>
-   <signal>editingFinished()</signal>
-   <receiver>search_Button</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>134</x>
-     <y>65</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>41</x>
-     <y>69</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

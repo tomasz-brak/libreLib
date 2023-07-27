@@ -4,9 +4,12 @@ from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QMessageBox
 from users import open_users_popup
 import sys
+import print_labels
 import pymongo
 import searchKaro
 import re
+
+LABEL_TEXT = "LibreLib"
 
 
 def create_ui():
@@ -123,6 +126,7 @@ def create_ui():
 
     def search():
         # check if the search query is intabe
+        linetext = ui.lineEdit.text()
         if ui.lineEdit.text().isdigit():
             print("performing a number search")
             regex_pat = re.compile('.*' + re.escape(ui.lineEdit.text()) + '.*', re.IGNORECASE)
@@ -137,6 +141,20 @@ def create_ui():
                 )
             )
             change_table(res, len(res))
+
+        elif linetext.find("-") != -1 and linetext.split("-")[0].isdigit() and linetext.split("-")[1].isdigit():
+            res = list(
+                db.books.find(
+                    {
+                        "$and": [
+                            {"id": {"$gte": int(linetext.split("-")[0])}},
+                            {"id": {"$lte": int(linetext.split("-")[1])}},
+                        ]
+                    }
+                )
+            )
+            change_table(res, len(res))
+
         else:
             print("performing a text search")
             res = list(db.books.find({"$text": {"$search": ui.lineEdit.text()}}))
@@ -158,7 +176,13 @@ def create_ui():
             db.books.update_one({"id": int(dialog_ui.ID_edit.text())}, {"$set": book})
             dialog_win.close()
 
-        if len(get_selected()) == 1:
+        if get_selected() is None or len(get_selected()) != 1:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Select only one book")
+            msg.exec()
+            return
+
+        else:
             dialog_win = QtWidgets.QDialog()
             dialog_ui = Ui_Dialog()
             dialog_ui.setupUi(dialog_win)
@@ -176,14 +200,8 @@ def create_ui():
             dialog_win.exec()
 
 
-
-        else:
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Select one book only")
-            msg.exec()
-
     def delete():       
-        if len(get_selected()) == 0:
+        if get_selected() is None or len(get_selected()) == 0:
             msg = QtWidgets.QMessageBox()
             msg.setText("Select at least one book")
             msg.exec()
@@ -199,6 +217,25 @@ def create_ui():
             for book_id in book_ids:
                 db.books.delete_one({"id": int(book_id)})
 
+    def print_cards():
+        if get_selected() is None or len(get_selected()) == 0:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Select at least one book")
+            msg.exec()
+            return
+
+        book_ids = get_selected()
+        selected_books = []
+        for book_id in book_ids:
+            selected_books.append(db.books.find_one({"id": int(book_id)}))
+        
+        titles = [title.get("title") for title in selected_books]
+        ids = [id.get("id") for id in selected_books]   
+
+
+        print_labels.generate_labels(titles, ids, LABEL_TEXT)
+
+
 
 
     ui.new_book_button.clicked.connect(new_book)
@@ -206,6 +243,7 @@ def create_ui():
     ui.edit_book_button.clicked.connect(edit)
     ui.delete_book.clicked.connect(delete)
     ui.actionManage.triggered.connect(open_users_popup)
+    ui.print_cards_button.clicked.connect(print_cards)
 
 
     sys.exit(app.exec())

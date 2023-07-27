@@ -8,7 +8,7 @@ def open_users_popup():
     client = pymongo.MongoClient("localhost", 27017)
     db = client["libreLib"]
 
-    db.users.create_index([("name", pymongo.TEXT), ("surename", pymongo.TEXT)])
+    db.users.create_index([("name", pymongo.TEXT), ("surname", pymongo.TEXT)])
 
     dialog_window = QtWidgets.QDialog()
     dialog_ui = Ui_Users_editor()
@@ -61,16 +61,71 @@ def open_users_popup():
                 row, 4, QtWidgets.QTableWidgetItem(str(data["_id"]))
                 )
 
+    def get_selected() -> list[str] | None:
+        selected_rows = dialog_ui.table_users.selectionModel().selectedRows()
+        if not selected_rows:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Select at least one row")
+            msg.exec()
+            return None
+        
+        else:
+            selected__ids = [row.data(0) for row in selected_rows]
+            return selected__ids
+
     def edit_user():
-        pass
+        def confirm_edit():
+            user = {
+                "id": int(edit_ui.id_edit.text()),
+                "name": edit_ui.name_edit.text(),
+                "surname": edit_ui.surename_edit.text(),
+                "phone": edit_ui.p_number_edit.text(),
+            }
+            db.users.update_one({"id": user["id"]}, {"$set": user})
+            edit_window.close()
+
+        selected_ids = get_selected()
+        if selected_ids is None or len(selected_ids) != 1:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Select one row")
+            msg.exec()
+            return
+        else:
+            user = db.users.find_one({"id": int(selected_ids[0])})
+            edit_window = QtWidgets.QDialog()
+            edit_ui = Ui_user_edit_dialog()
+            edit_ui.setupUi(edit_window)
+            edit_ui.id_edit.setText(str(user["id"]))
+            edit_ui.name_edit.setText(user["name"])
+            edit_ui.surename_edit.setText(user["surname"])
+            edit_ui.p_number_edit.setText(user["phone"])
+            edit_ui.buttonBox.accepted.connect(confirm_edit)
+            edit_window.exec()
 
     def delete_user():
-        pass
-
+        if get_selected() is None or len(get_selected()) == 0:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Select at least one row")
+            msg.exec()
+            return
+        msg = QtWidgets.QMessageBox()
+        msg.setText("Are you sure you want to delete selected users?")
+        msg.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
+        exc = msg.exec()
+        print(exc)
+        if 16384 == int(exc):
+            ids = get_selected()
+            for id in ids:
+                print(db.users.find_one({"id": int(id)}))
+                db.users.delete_one({"id": int(id)})
+                
     def print_users():
         pass
 
     dialog_ui.new_usr_button.clicked.connect(new_user)
     dialog_ui.search_Button.clicked.connect(perform_search)
+    dialog_ui.delete_usr_button.clicked.connect(delete_user)
+    dialog_ui.edit_usr_button.clicked.connect(edit_user)
+
 
     dialog_window.exec()
