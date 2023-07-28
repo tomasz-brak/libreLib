@@ -4,7 +4,7 @@ from ui.user_edit_dialog import Ui_user_edit_dialog
 import pymongo
 
 
-def open_users_popup():
+def open_users_popup(action = None):
     client = pymongo.MongoClient("localhost", 27017)
     db = client["libreLib"]
 
@@ -13,6 +13,9 @@ def open_users_popup():
     dialog_window = QtWidgets.QDialog()
     dialog_ui = Ui_Users_editor()
     dialog_ui.setupUi(dialog_window)
+
+    if action == "select_one":
+        dialog_ui.ok_button.setEnabled(True)
 
     def new_user():
         new_user_window = QtWidgets.QDialog()
@@ -27,6 +30,7 @@ def open_users_popup():
                 "name": new_user_ui.name_edit.text(),
                 "surname": new_user_ui.surename_edit.text(),
                 "phone": new_user_ui.p_number_edit.text(),
+                "borrowedBooks": [],
             }
             db.users.insert_one(user)
 
@@ -121,11 +125,32 @@ def open_users_popup():
                 
     def print_users():
         pass
+        
+    selected = {}
+
+    def ok_pressed():
+        selected_ids = get_selected()
+        if selected_ids is None or len(selected_ids) != 1:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Select one row")
+            msg.exec()
+            return
+        else:
+            
+            for item in db.users.find_one({"id": int(selected_ids[0])}):
+                selected[item] = db.users.find_one({"id": int(selected_ids[0])})[item]
+            dialog_window.close()
+            
 
     dialog_ui.new_usr_button.clicked.connect(new_user)
     dialog_ui.search_Button.clicked.connect(perform_search)
     dialog_ui.delete_usr_button.clicked.connect(delete_user)
     dialog_ui.edit_usr_button.clicked.connect(edit_user)
+    dialog_ui.ok_button.clicked.connect(ok_pressed)
+    dialog_ui.print_usr_button.clicked.connect(print_users)
 
+    
 
     dialog_window.exec()
+
+    return selected

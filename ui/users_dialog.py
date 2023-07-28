@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file './ui//users_dialog.ui'
+# Form implementation generated from reading ui file './ui/users_dialog.ui'
 #
 # Created by: PyQt6 UI code generator 6.5.2
 #
@@ -53,6 +53,10 @@ class Ui_Users_editor(object):
         self.table_users.setColumnCount(0)
         self.table_users.setRowCount(0)
         self.verticalLayout_2.addWidget(self.table_users)
+        self.ok_button = QtWidgets.QPushButton(parent=Users_editor)
+        self.ok_button.setEnabled(False)
+        self.ok_button.setObjectName("ok_button")
+        self.verticalLayout_2.addWidget(self.ok_button)
 
         self.retranslateUi(Users_editor)
         QtCore.QMetaObject.connectSlotsByName(Users_editor)
@@ -65,6 +69,7 @@ class Ui_Users_editor(object):
         self.delete_usr_button.setText(_translate("Users_editor", "Delete"))
         self.edit_usr_button.setText(_translate("Users_editor", "Edit"))
         self.print_usr_button.setText(_translate("Users_editor", "Print Card"))
+        self.ok_button.setText(_translate("Users_editor", "OK"))
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file './ui//book_list.ui'
+# Form implementation generated from reading ui file './ui/book_list.ui'
 #
 # Created by: PyQt6 UI code generator 6.5.2
 #
@@ -28,6 +28,9 @@ class Ui_MainWindow(object):
         self.borrow_book = QtWidgets.QPushButton(parent=self.centralwidget)
         self.borrow_book.setObjectName("borrow_book")
         self.horizontalLayout.addWidget(self.borrow_book)
+        self.return_book_button = QtWidgets.QPushButton(parent=self.centralwidget)
+        self.return_book_button.setObjectName("return_book_button")
+        self.horizontalLayout.addWidget(self.return_book_button)
         self.new_book_button = QtWidgets.QPushButton(parent=self.centralwidget)
         self.new_book_button.setObjectName("new_book_button")
         self.horizontalLayout.addWidget(self.new_book_button)
@@ -82,6 +85,7 @@ class Ui_MainWindow(object):
         self.delete_book.setText(_translate("MainWindow", "Delete Selected"))
         self.borrow_book.setText(_translate("MainWindow", "Borrow Selected"))
         self.borrow_book.setShortcut(_translate("MainWindow", "Ctrl+B"))
+        self.return_book_button.setText(_translate("MainWindow", "Return Selected"))
         self.new_book_button.setText(_translate("MainWindow", "New Book"))
         self.new_book_button.setShortcut(_translate("MainWindow", "Ctrl+N"))
         self.print_cards_button.setText(_translate("MainWindow", "Print cards"))
