@@ -27,6 +27,7 @@ def extract():
                         "price": row[6],
                         "isbn": row[7],
                         "location": "",
+                        "borrowedBy_id": "",
                     }
                 )
     return books

@@ -42,6 +42,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="return_book_button">
+        <property name="text">
+         <string>Return Selected</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="new_book_button">
         <property name="text">
          <string>New Book</string>

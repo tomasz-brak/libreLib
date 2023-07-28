@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file './ui//book_edit_dialog.ui'
+# Form implementation generated from reading ui file './ui/book_edit_dialog.ui'
 #
 # Created by: PyQt6 UI code generator 6.5.2
 #
@@ -118,6 +118,15 @@ class Ui_Dialog(object):
         self.buttonBox.accepted.connect(Dialog.accept) # type: ignore
         self.buttonBox.rejected.connect(Dialog.reject) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+        Dialog.setTabOrder(self.isbn_edit, self.searchButton)
+        Dialog.setTabOrder(self.searchButton, self.Author_edit)
+        Dialog.setTabOrder(self.Author_edit, self.Title_edit)
+        Dialog.setTabOrder(self.Title_edit, self.year_published_edit)
+        Dialog.setTabOrder(self.year_published_edit, self.volume_edit)
+        Dialog.setTabOrder(self.volume_edit, self.publisher_edit)
+        Dialog.setTabOrder(self.publisher_edit, self.price_edit)
+        Dialog.setTabOrder(self.price_edit, self.location_comboBox)
+        Dialog.setTabOrder(self.location_comboBox, self.ID_edit)
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate

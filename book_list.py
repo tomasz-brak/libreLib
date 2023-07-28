@@ -2,6 +2,7 @@ from ui.book_list import Ui_MainWindow
 from ui.book_edit_dialog import Ui_Dialog
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtGui import QColor
 from users import open_users_popup
 import sys
 import print_labels
@@ -9,7 +10,7 @@ import pymongo
 import searchKaro
 import re
 
-LABEL_TEXT = "LibreLib"
+LABEL_TEXT = "+48 663194558 | Pod Sosną 51 32-095"
 
 
 def create_ui():
@@ -21,7 +22,7 @@ def create_ui():
             ("author", pymongo.TEXT),
             ("publisher", pymongo.TEXT),
             ("location", pymongo.TEXT),
-        ]
+        ],
     )
 
     app = QtWidgets.QApplication(sys.argv)
@@ -68,23 +69,35 @@ def create_ui():
                 "price": dialog_ui.price_edit.text(),
                 "isbn": dialog_ui.isbn_edit.text(),
                 "location": dialog_ui.location_comboBox.currentText(),
+                "borrowedBy_id": "",
             }
             db.books.insert_one(book)
 
 
         def karo():
-            resp = searchKaro.get_data(isbn=dialog_ui.isbn_edit.text())
-            if resp is None:
+            resp = []
+            resp.append(searchKaro.get_data(isbn=dialog_ui.isbn_edit.text(), bib="BN"))
+            resp.append(searchKaro.get_data(isbn=dialog_ui.isbn_edit.text(), bib="UJ"))
+            resp.append(searchKaro.get_data(isbn=dialog_ui.isbn_edit.text(), bib="NUKAT"))
+
+            # check for not None response
+            valid = None
+            for res in resp:
+                if res is not None:
+                    valid = res
+                    break
+                
+            if valid is None:
                 msg = QtWidgets.QMessageBox()
                 msg.setText("No book found with that ISBN")
                 msg.exec()
             else:
-                dialog_ui.Title_edit.setText(resp["title"])
-                dialog_ui.Author_edit.setText(resp["author"])
-                dialog_ui.year_published_edit.setText(resp["year_published"])
-                dialog_ui.volume_edit.setText(resp["volume"])
-                dialog_ui.publisher_edit.setText(resp["publisher"])
-                dialog_ui.isbn_edit.setText(resp["isbn"])
+                dialog_ui.Title_edit.setText(valid["title"])
+                dialog_ui.Author_edit.setText(valid["author"])
+                dialog_ui.year_published_edit.setText(valid["year_published"])
+                dialog_ui.volume_edit.setText(valid["volume"])
+                dialog_ui.publisher_edit.setText(valid["publisher"])
+                dialog_ui.isbn_edit.setText(valid["isbn"])
 
         dialog_ui.searchButton.clicked.connect(karo)
         dialog_ui.buttonBox.accepted.connect(add)
@@ -109,6 +122,27 @@ def create_ui():
         ]
         ui.tableWidget.setHorizontalHeaderLabels(headers)
 
+        def highlight_row(row: int, color: str) -> None:
+            """Highlights a row in the book table
+
+            Args:
+                row (int): row to highlight
+                color (str): color to use
+            """
+            for i in range(9):
+                item = ui.tableWidget.item(row, i)
+                item.setBackground(QColor(color))
+        
+        def unhighlight_row(row: int) -> None:
+            """Unhighlights a row in the book table
+
+            Args:
+                row (int): row to unhighlight
+            """
+            for i in range(9):
+                item = ui.tableWidget.item(row, i)
+                item.setBackground(QtWidgets.QTableWidget.palette().base())
+
         for row, data in enumerate(rows):
             ui.tableWidget.setItem(row, 0, QtWidgets.QTableWidgetItem(str(data["id"])))
             ui.tableWidget.setItem(row, 1, QtWidgets.QTableWidgetItem(data["author"]))
@@ -123,6 +157,9 @@ def create_ui():
             ui.tableWidget.setItem(row, 6, QtWidgets.QTableWidgetItem(data["price"]))
             ui.tableWidget.setItem(row, 7, QtWidgets.QTableWidgetItem(data["isbn"]))
             ui.tableWidget.setItem(row, 8, QtWidgets.QTableWidgetItem(data["location"]))
+
+            if data["borrowedBy_id"] is not None and data["borrowedBy_id"] != "":
+                highlight_row(row, "red")
 
     def search():
         # check if the search query is intabe
@@ -235,7 +272,38 @@ def create_ui():
 
         print_labels.generate_labels(titles, ids, LABEL_TEXT)
 
+    def borrow():
+        if get_selected() is None or len(get_selected()) != 1:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Select one book")
+            msg.exec()
+            return
+        
+        selected = get_selected()
+        # ask about who to borrow the book to
+        
+        user = open_users_popup("select_one")
+        book = db.books.update_one({"id": int(selected[0])}, {"$set": {"borrowedBy_id": user["_id"]}})
+        db.users.update_one({"_id": user["_id"]}, {"$push": {"borrowedBooks": db.books.find_one({"id": int(selected[0])})["_id"]}})
 
+        
+
+        print(user)
+        
+    def return_book():
+        if get_selected() is None or len(get_selected()) == 0:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Select at least one book")
+            msg.exec()
+            return
+        
+        selected = get_selected()
+        db.books.update_one({"id": int(selected[0])}, {"$set": {"borrowedBy_id": None}})
+        user = db.users.find_one({"borrowedBooks": db.books.find_one({"id": int(selected[0])})["_id"]})
+        db.users.update_one({"_id": user["_id"]}, {"$pull": {"borrowedBooks": db.books.find_one({"id": int(selected[0])})["_id"]}})
+        msg = QtWidgets.QMessageBox()
+        msg.setText("Book returned")
+        msg.exec()
 
 
     ui.new_book_button.clicked.connect(new_book)
@@ -244,6 +312,9 @@ def create_ui():
     ui.delete_book.clicked.connect(delete)
     ui.actionManage.triggered.connect(open_users_popup)
     ui.print_cards_button.clicked.connect(print_cards)
+    ui.borrow_book.clicked.connect(borrow)
+    ui.lineEdit.returnPressed.connect(search)
+    ui.return_book_button.clicked.connect(return_book)
 
 
     sys.exit(app.exec())

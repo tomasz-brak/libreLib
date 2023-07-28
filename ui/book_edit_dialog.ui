@@ -177,6 +177,18 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>isbn_edit</tabstop>
+  <tabstop>searchButton</tabstop>
+  <tabstop>Author_edit</tabstop>
+  <tabstop>Title_edit</tabstop>
+  <tabstop>year_published_edit</tabstop>
+  <tabstop>volume_edit</tabstop>
+  <tabstop>publisher_edit</tabstop>
+  <tabstop>price_edit</tabstop>
+  <tabstop>location_comboBox</tabstop>
+  <tabstop>ID_edit</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

@@ -1,6 +1,6 @@
 import pymongo
 from PIL import Image, ImageDraw, ImageFont
-from barcode import Code128
+from barcode import Code128, EAN13
 from barcode.writer import ImageWriter
 from io import BytesIO
 from reportlab.lib.pagesizes import A4
@@ -19,7 +19,7 @@ def generate_labels(titles: list[str], ids: list[int], add_text: str) -> Image:
     Y_DIV = 10
     FONT_SIZE = 32
 
-    CHAR_LIMIT = 25
+    CHAR_LIMIT = 32
 
     per_page = X_DIV * Y_DIV
     X_offset = A4[0] // X_DIV
@@ -29,7 +29,7 @@ def generate_labels(titles: list[str], ids: list[int], add_text: str) -> Image:
         "barcode": (50, 50),
         "id": (50, 0),
         "title": (30, 300),
-        "add_text": (0, 0),
+        "add_text": (15, 15),
     }
 
     # page_vis = []
@@ -96,11 +96,11 @@ def generate_labels(titles: list[str], ids: list[int], add_text: str) -> Image:
 
         writer = ImageWriter()
         writer.set_options({'quiet_zone': 0, "background": "transparent"})
-        barcode = Code128(str(id), writer)
-        image.paste(barcode.render(), offsets["barcode"])
+        barcode = Code128(str(id), writer=writer)
+        image.paste(barcode.render({'quiet_zone': 0, "module_width": 0.35}), offsets["barcode"])
 
         draw.text(offsets["title"], title, (0, 0, 0), font)
-        draw.text(offsets["add_text"], add_text, (0, 0, 0), font)
+        draw.text(offsets["add_text"], add_text, (0, 0, 175), font)
 
 
         return image

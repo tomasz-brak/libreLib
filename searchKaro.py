@@ -3,7 +3,7 @@ from pymarc import MARCReader
 
 
 
-def get_data(isbn):
+def get_data(isbn, bib):
     isbn = str(isbn)
     payload = {
         'kl': '',
@@ -16,7 +16,7 @@ def get_data(isbn):
         'pubyearh': '',
         'pubyearl': '',
         'lang': 'pl',
-        'bib': "BN",
+        'bib': bib,
         'si': '1',
         'qt': 'F',
         'di': 'i' + isbn,
