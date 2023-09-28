@@ -234,6 +234,34 @@ def create_ui():
             dialog_ui.isbn_edit.setText(book["isbn"])
 
             dialog_ui.buttonBox.accepted.connect(confirm_edit)
+
+            def karo():
+                resp = []
+                resp.append(searchKaro.get_data(isbn=dialog_ui.isbn_edit.text(), bib="BN"))
+                resp.append(searchKaro.get_data(isbn=dialog_ui.isbn_edit.text(), bib="UJ"))
+                resp.append(searchKaro.get_data(isbn=dialog_ui.isbn_edit.text(), bib="NUKAT"))
+
+                # check for not None response
+                valid = None
+                for res in resp:
+                    if res is not None:
+                        valid = res
+                        break
+                    
+                if valid is None:
+                    msg = QtWidgets.QMessageBox()
+                    msg.setText("No book found with that ISBN")
+                    msg.exec()
+                else:
+                    dialog_ui.Title_edit.setText(valid["title"])
+                    dialog_ui.Author_edit.setText(valid["author"])
+                    dialog_ui.year_published_edit.setText(valid["year_published"])
+                    dialog_ui.volume_edit.setText(valid["volume"])
+                    dialog_ui.publisher_edit.setText(valid["publisher"])
+                    dialog_ui.isbn_edit.setText(valid["isbn"])
+
+            dialog_ui.searchButton.clicked.connect(karo)
+
             dialog_win.exec()
 
 

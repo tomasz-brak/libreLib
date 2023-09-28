@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file './ui/book_edit_dialog.ui'
+# Form implementation generated from reading ui file './src/ui//book_edit_dialog.ui'
 #
 # Created by: PyQt6 UI code generator 6.5.2
 #
