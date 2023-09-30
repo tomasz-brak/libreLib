@@ -10,7 +10,7 @@ import pymongo
 import searchKaro
 import re
 
-LABEL_TEXT = "***REMOVED***"
+LABEL_TEXT = "+48 ***REMOVED*** | ***REMOVED***"
 
 
 def create_ui():
